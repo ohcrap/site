@@ -6,7 +6,13 @@
   - haproxy
   - socat
 
-- name: configure haproxy with Apache backend hosts
+- name: create a self-signed SSL certificate for HAProxy SSL frontend
+  command: openssl req -new -nodes -x509 -subj "/C=IE/L=Cork/O=IT/CN={{ ansible_fqdn }}" -days 3650 -keyout /etc/pki/tls/certs/{{ ansible_fqdn }}.key -out /etc/pki/tls/certs/{{ ansible_fqdn }}.crt -extensions v3_ca creates=/etc/pki/tls/certs/{{ ansible_fqdn }}.crt
+
+- name: concatenate SSL key and public cert into a pem file
+  shell: cat /etc/pki/tls/certs/{{ ansible_fqdn }}.crt /etc/pki/tls/certs/{{ ansible_fqdn }}.key | tee /etc/pki/tls/certs/{{ ansible_fqdn }}.pem creates=/etc/pki/tls/certs/{{ ansible_fqdn }}.pem
+
+- name: configure SSL-enabled haproxy with Apache backend hosts
   template: src=haproxy.cfg.j2 dest=/etc/haproxy/haproxy.cfg
   notify: restart haproxy
 
@@ -16,6 +22,7 @@
 - name: enable the HAProxy frontend HTTP port + stats port
   firewalld: port={{ item }} permanent=true state=enabled
   with_items:
+    - 443/tcp
     - 80/tcp
     - 81/tcp
   notify: restart firewalld

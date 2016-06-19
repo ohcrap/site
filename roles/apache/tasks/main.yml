@@ -5,19 +5,26 @@
     - php
     - git
     - php-mysql
+    - mod_ssl
 
-- name: ensure that Apache is started and enabled at boot
-  service: name=httpd enabled=yes state=started
-
-- name: open up HTTP port
-  firewalld: service=http permanent=true state=enabled
+- name: open up SSL port
+  firewalld: service=https permanent=true state=enabled
   notify: restart firewalld
 
 - name: update a configured DocRoot httpd.conf file
   template: src=httpd.conf.j2 dest=/etc/httpd/conf/httpd.conf
+
+- name: create a self-signed SSL certificate
+  command: openssl req -new -nodes -x509 -subj "/C=IE/L=Cork/O=IT/CN={{ ansible_fqdn }}" -days 3650 -keyout /etc/pki/tls/certs/{{ ansible_fqdn }}.key -out /etc/pki/tls/certs/{{ ansible_fqdn }}.crt -extensions v3_ca creates=/etc/pki/tls/certs/{{ ansible_fqdn }}.crt
+
+- name: update a configured ssl.conf file
+  template: src=ssl.conf.j2 dest=/etc/httpd/conf.d/ssl.conf
   notify: restart httpd
 
 - name: configure Git repo for PHP code
   git: repo=https://github.com/ohcrap/test.git dest=/git_site/
   tags:
     - git
+
+- name: ensure that Apache is started and enabled at boot
+  service: name=httpd enabled=yes state=started

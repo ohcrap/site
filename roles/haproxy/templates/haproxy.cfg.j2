@@ -60,7 +60,13 @@ defaults
 #---------------------------------------------------------------------
 # main frontend which proxys to the backends
 #---------------------------------------------------------------------
-frontend  main *:80
+frontend  main
+ 
+    bind *:80
+    bind *:443 ssl crt /etc/pki/tls/certs/{{ ansible_fqdn }}.pem
+    
+    redirect scheme https if !{ ssl_fc }
+    
     acl url_static       path_beg       -i /static /images /javascript /stylesheets
     acl url_static       path_end       -i .jpg .gif .png .css .js
 
@@ -81,7 +87,7 @@ backend app
     balance     roundrobin
 
     {% for host in groups['web'] %}
-        server {{ host }} {{ hostvars[host]['ansible_default_ipv4']['address'] }}:80 check
+        server {{ host }} {{ hostvars[host]['ansible_default_ipv4']['address'] }}:443 ssl verify none 
     {% endfor %}
 
 #---------------------------------------------------------------------

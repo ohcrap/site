@@ -19,3 +19,5 @@
 - hosts: ha
   roles: 
     - haproxy
+  tags:
+    - ha
