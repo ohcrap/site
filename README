@@ -72,7 +72,3 @@ https://haproxy_url
 
 (we can also use http://haproxy_url confirming the SSL redirect is working properly)
 after which the index.php test page would open showing the "Connected successfully", showing that we can connect to the database backend.
-
-
-
--- Luka Bujas, 19.06.2016.
