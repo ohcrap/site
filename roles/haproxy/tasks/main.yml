@@ -8,8 +8,6 @@
 
 - name: Configure the haproxy with Apache backend hosts
   template: src=haproxy.cfg.j2 dest=/etc/haproxy/haproxy.cfg
-  tags:
-    - template
   notify: restart haproxy
 
 - name: Start the haproxy service
