@@ -1,0 +1,23 @@
+- name: install packages
+  yum: name={{ item }} state=latest
+  with_items:
+    - httpd
+    - php
+    - git
+    - php-mysql
+
+- name: ensure that Apache is started and enabled at boot
+  service: name=httpd enabled=yes state=started
+
+- name: open up HTTP port
+  firewalld: service=http permanent=true state=enabled
+  notify: restart firewalld
+
+- name: update a configured DocRoot httpd.conf file
+  template: src=httpd.conf.j2 dest=/etc/httpd/conf/httpd.conf
+  notify: restart httpd
+
+- name: configure Git repo for PHP code
+  git: repo=https://github.com/ohcrap/test.git dest=/git_site/
+  tags:
+    - git

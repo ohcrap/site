@@ -1,0 +1,20 @@
+---
+
+- name: Download and install haproxy and socat packages
+  yum: name={{ item }} state=present
+  with_items:
+  - haproxy
+  - socat
+
+- name: Configure the haproxy with Apache backend hosts
+  template: src=haproxy.cfg.j2 dest=/etc/haproxy/haproxy.cfg
+  tags:
+    - template
+  notify: restart haproxy
+
+- name: Start the haproxy service
+  service: name=haproxy state=started enabled=yes
+
+- name: enable the HAProxy frontend HTTP port
+  firewalld: service=http permanent=true state=enabled
+  notify: restart firewalld

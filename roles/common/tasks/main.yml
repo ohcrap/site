@@ -1,0 +1,16 @@
+---
+
+- name: install NTP service
+  yum: name=ntp state=latest
+
+- name: make sure NTP is running
+  service: name=ntpd enabled=yes state=started
+
+- name: disable SELinux
+  selinux: state=disabled
+
+- name: make sure Firewalld is running
+  service: name=firewalld enabled=yes state=started
+
+- name: push hosts.conf dynamic template to the servers
+  template: src=hosts.j2 dest=/etc/hosts.conf

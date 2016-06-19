@@ -1,0 +1,24 @@
+---
+# Grabbing facts from all the hosts and applying common role - NTP, SELinux, Hosts
+- hosts: all
+  tasks: []
+  roles:
+    - common
+
+# Installing MySQL DB server from community repos
+
+- hosts: db
+  roles:
+    - mysql
+       
+# Installing Apache + PHP + Git support
+
+- hosts: web
+  roles:
+    - apache
+
+# Install and configure HAProxy HTTP Load balancer frontend
+
+- hosts: ha
+  roles: 
+    - haproxy
