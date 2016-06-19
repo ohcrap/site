@@ -1,0 +1,78 @@
+This is a customized LAMP stack setup using Ansible configuration tool.
+
+Setup is being run with the tollowing command:
+
+ansible-playbook -i hosts site.yml -v (-v is for verbose output)
+
+Directory tree:
+
+.
+├── hosts
+├── roles
+│   ├── apache
+│   │   ├── handlers
+│   │   │   └── main.yml
+│   │   ├── tasks
+│   │   │   └── main.yml
+│   │   └── templates
+│   │       ├── httpd.conf.j2
+│   │       └── ssl.conf.j2
+│   ├── common
+│   │   ├── tasks
+│   │   │   └── main.yml
+│   │   └── templates
+│   │       └── hosts.j2
+│   ├── haproxy
+│   │   ├── handlers
+│   │   │   └── main.yml
+│   │   ├── tasks
+│   │   │   └── main.yml
+│   │   └── templates
+│   │       └── haproxy.cfg.j2
+│   └── mysql
+│       ├── handlers
+│       │   └── main.yml
+│       └── tasks
+│           └── main.yml
+└── site.yml
+
+ROLES:
+
+1. apache
+ 
+ - Installs Apache HTTPD package on two webserver nodes
+ - Installs PHP + MySQL support for PHP-enabled sites with MySQL DB backends
+ - Installs Git support for storing PHP code on Github
+ - Installs mod_ssl for SSL site setup, also disabling HTTP for increased security
+ 
+2. common
+
+ - Installs and starts the NTP service
+ - Disables SELinux
+ - Makes sure Firewall is up and running
+ - Dynamically configures /etc/hosts file adding host information from ansible hosts file
+
+3. haproxy
+
+ - Install HAProxy and socat packages
+ - Sets up the SSL LB frontend
+ - Configures Apache backends based on the information from ansible hosts file
+ - Configures HAProxy stats page (port 81) for backend monitoring
+ - Redirects HTTP requests to HTTPS
+
+4. mysql
+
+ - Adds MySQL repo (as Centos is now using MariaDB)
+ - Installs MySQL community server package + python support
+ - Creates a test user which our PHP script will use for connection testing
+
+To confirm the setup is working, we should open the HAProxy LB URL: 
+
+https://haproxy_url   
+
+(we can also use http://haproxy_url confirming the SSL redirect is working properly)
+after which the index.php test page would open showing the "Connected successfully", showing that we can connect to the database backend.
+
+
+
+-- Luka Bujas, 19.06.2016.
