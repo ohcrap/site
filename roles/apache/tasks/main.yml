@@ -7,10 +7,6 @@
     - php-mysql
     - mod_ssl
 
-- name: open up SSL port
-  firewalld: service=https permanent=true state=enabled
-  notify: restart firewalld
-
 - name: update a configured DocRoot httpd.conf file
   template: src=httpd.conf.j2 dest=/etc/httpd/conf/httpd.conf
 
@@ -25,6 +21,10 @@
   git: repo=https://github.com/ohcrap/test.git dest=/git_site/
   tags:
     - git
+
+- name: open up SSL port
+  firewalld: service=https permanent=true state=enabled
+  notify: restart firewalld
 
 - name: ensure that Apache is started and enabled at boot
   service: name=httpd enabled=yes state=started
