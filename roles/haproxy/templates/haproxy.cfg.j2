@@ -84,3 +84,13 @@ backend app
         server {{ host }} {{ hostvars[host]['ansible_default_ipv4']['address'] }}:80 check
     {% endfor %}
 
+#---------------------------------------------------------------------
+# Addding HAProxy statistics site
+#---------------------------------------------------------------------
+
+    listen stats :80
+    stats enable
+    stats hide-version
+    stats realm Haproxy\ Stats\ Page
+    stats uri /stats
+    stats auth ha:ha
