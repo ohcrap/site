@@ -7,7 +7,8 @@ ansible-playbook -i hosts site.yml -v -k
 -i defines the hosts inventory file
 -v is for verbose output
 -k is to ask for sudo password. It's not necessary if the ssh key has already been copied to the hosts. 
-   Also, if no previous connection to the hosts has been made, we can avoid the host key checking by adding the
+
+Also, if no previous connection to the hosts has been made, we can avoid the host key checking by running
   
   export ANSIBLE_HOST_KEY_CHECKING=False 
   
