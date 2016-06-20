@@ -2,10 +2,20 @@ This is a customized LAMP stack setup using Ansible configuration tool.
 
 Setup is being run with the tollowing command:
 
-ansible-playbook -i hosts site.yml -v (-v is for verbose output)
+ansible-playbook -i hosts site.yml -v -k 
+
+-i defines the hosts inventory file
+-v is for verbose output
+-k is to ask for sudo password. It's not necessary if the ssh key has already been copied to the hosts. 
+   Also, if no previous connection to the hosts has been made, we can avoid the host key checking by adding the
+  
+  export ANSIBLE_HOST_KEY_CHECKING=False 
+  
+  while running the playbook, and afterwards revert it with
+  
+  unset ANSIBLE_HOST_KEY_CHECKING
 
 Directory tree:
-
 .
 ├── hosts
 ├── roles
@@ -57,7 +67,7 @@ ROLES:
  - Install HAProxy and socat packages
  - Sets up the SSL LB frontend
  - Configures Apache backends based on the information from ansible hosts file
- - Configures HAProxy stats page (port 81) for backend monitoring
+ - Configures HAProxy stats page (port 81) for backend monitoring - http://haproxy_url:81/stats (ha/ha)
  - Redirects HTTP requests to HTTPS
 
 4. mysql
