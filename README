@@ -85,3 +85,12 @@ https://haproxy_url
 after which the index.php test page would open showing the "Connected successfully", showing that we can connect to the database backend.
 
 Tested on CentOS 7.1
+
+Additional:
+
+To confirm the PHP code fetch from Github is working properly, 
+we can change the connection parameters in the index.php test script and run the following:
+
+ansible-playbook -i hosts site.yml -v -k --tags git
+
+This will only run the tagged part of the playbook, which in this case is git pull of the updated PHP code.
