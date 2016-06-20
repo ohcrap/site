@@ -13,4 +13,4 @@
   service: name=firewalld enabled=yes state=started
 
 - name: push hosts.conf dynamic template to the servers
-  template: src=hosts.j2 dest=/etc/hosts.conf
+  template: src=hosts.j2 dest=/etc/hosts
