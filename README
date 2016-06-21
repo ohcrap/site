@@ -1,6 +1,6 @@
 This is a customized LAMP stack setup using Ansible configuration tool.
 
-Setup is being run with the tollowing command:
+Setup is being run with the following command:
 
 ansible-playbook -i hosts site.yml -v -k 
 
